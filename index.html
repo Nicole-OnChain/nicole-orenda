@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nicole Orenda — Author & Creative Media</title>
+    <meta name="description" content="Nicole Orenda is an author and creative media producer building fantasy worlds and digital education for the next generation of readers and creators.">
+    <meta property="og:title" content="Nicole Orenda — Author & Creative Media">
+    <meta property="og:description" content="Fantasy worlds, digital education, and stories that stay with you.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nicoleorenda.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --ink: #0a0a0f;
+            --ink-deep: #06060a;
+            --parchment: #d4cfc6;
+            --parchment-bright: #f0ebe2;
+            --parchment-muted: #8a8478;
+            --gold: #c9a84c;
+            --gold-dim: #8a7434;
+            --rose: #c4a0a0;
+            --rose-glow: #d4a8a8;
+            --sage: #7a8a6a;
+            --twilight: #5a6a8a;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--ink);
+            color: var(--parchment);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 18px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--ink-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes shimmer { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+        @keyframes drift {
+            0% { transform: translateX(-20px) translateY(0); opacity: 0; }
+            20% { opacity: 0.4; }
+            80% { opacity: 0.4; }
+            100% { transform: translateX(40px) translateY(-30px); opacity: 0; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 32px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: background 0.4s ease, padding 0.4s ease;
+        }
+        nav.scrolled {
+            background: rgba(6, 6, 10, 0.92);
+            backdrop-filter: blur(20px);
+            padding: 12px 32px;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+        }
+        .nav-logo {
+            font-family: 'Cinzel', serif; font-size: 15px; font-weight: 600;
+            color: var(--gold); letter-spacing: 3px; text-transform: uppercase; text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a {
+            font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 400;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--parchment-muted); text-decoration: none; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--gold); }
+        .mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+        .mobile-toggle span { display: block; width: 24px; height: 2px; background: var(--parchment-muted); margin: 5px 0; }
+
+        /* Hero */
+        .hero {
+            position: relative; min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 80px 24px; overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 80%, rgba(196, 160, 160, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 60%, rgba(122, 138, 106, 0.03) 0%, transparent 40%),
+                var(--ink-deep);
+        }
+        .hero-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+        .particle {
+            position: absolute; width: 2px; height: 2px;
+            background: var(--gold); border-radius: 50%; opacity: 0;
+            animation: drift 10s ease-in-out infinite;
+        }
+
+        .hero-name {
+            position: relative;
+            font-family: 'Cinzel', serif; font-size: clamp(36px, 7vw, 84px); font-weight: 700;
+            color: var(--parchment-bright); letter-spacing: 4px; line-height: 1.1;
+            animation: fadeIn 2s ease;
+        }
+        .hero-name .orenda {
+            color: var(--gold);
+            font-style: italic;
+        }
+        .hero-tagline {
+            position: relative;
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic;
+            color: var(--parchment-muted); margin-top: 20px; max-width: 500px;
+            animation: fadeInUp 2s ease 0.4s both;
+        }
+        .hero-tag {
+            position: relative;
+            font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--gold-dim); margin-top: 36px;
+            animation: fadeInUp 2s ease 0.8s both;
+        }
+        .hero-cta {
+            position: relative; margin-top: 40px;
+            display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+            animation: fadeInUp 2s ease 1s both;
+        }
+        .btn {
+            font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+            letter-spacing: 2px; text-transform: uppercase;
+            padding: 14px 32px; border: 1px solid; border-radius: 2px;
+            cursor: pointer; transition: all 0.4s ease; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-primary { background: transparent; color: var(--gold); border-color: var(--gold); }
+        .btn-primary:hover { background: var(--gold); color: var(--ink); }
+        .btn-secondary { background: transparent; color: var(--parchment-muted); border-color: var(--parchment-muted); }
+        .btn-secondary:hover { border-color: var(--rose-glow); color: var(--rose-glow); }
+        .scroll-indicator {
+            position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+            animation: float 3s ease-in-out infinite;
+        }
+        .scroll-indicator svg { width: 20px; height: 20px; stroke: var(--parchment-muted); stroke-width: 1.5; fill: none; }
+
+        /* Sections */
+        .section { padding: 100px 24px; max-width: 900px; margin: 0 auto; }
+        .section-wide { padding: 100px 24px; max-width: 1100px; margin: 0 auto; }
+        .section-label {
+            font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 4px;
+            text-transform: uppercase; color: var(--gold-dim); margin-bottom: 16px;
+        }
+        .section-heading {
+            font-family: 'Cinzel', serif; font-size: clamp(28px, 5vw, 48px); font-weight: 600;
+            color: var(--parchment-bright); letter-spacing: 2px; margin-bottom: 32px; line-height: 1.2;
+        }
+        .section-text { font-size: 20px; line-height: 1.9; color: var(--parchment); }
+        .section-text p { margin-bottom: 24px; }
+        .section-text em { color: var(--gold); font-style: italic; }
+        .section-text strong { color: var(--parchment-bright); font-weight: 600; }
+
+        .divider {
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+            padding: 40px 0; max-width: 600px; margin: 0 auto;
+        }
+        .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim), transparent); }
+        .divider-symbol { font-family: 'Cinzel', serif; font-size: 14px; color: var(--gold-dim); }
+
+        /* About */
+        .about-grid {
+            display: grid; grid-template-columns: 1fr 2fr; gap: 48px; align-items: start; margin-top: 32px;
+        }
+        .about-portrait {
+            border: 1px solid rgba(201, 168, 76, 0.15); border-radius: 4px;
+            padding: 24px; background: rgba(10, 10, 15, 0.6); text-align: center;
+        }
+        .about-portrait-placeholder {
+            width: 100%; aspect-ratio: 1; border-radius: 50%;
+            background: radial-gradient(ellipse at 40% 35%, rgba(201, 168, 76, 0.15), rgba(196, 160, 160, 0.08) 60%, transparent);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Cinzel', serif; font-size: 48px; color: var(--gold-dim);
+            margin-bottom: 20px;
+        }
+        .about-portrait-name { font-family: 'Cinzel', serif; font-size: 18px; color: var(--parchment-bright); letter-spacing: 2px; }
+        .about-portrait-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: var(--parchment-muted); margin-top: 4px; }
+
+        /* Works */
+        .works-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; margin-top: 48px;
+        }
+        .work-card {
+            position: relative; border: 1px solid rgba(201, 168, 76, 0.12); border-radius: 4px;
+            background: rgba(10, 10, 15, 0.6); padding: 36px 32px; transition: all 0.5s ease; overflow: hidden;
+            text-decoration: none;
+        }
+        .work-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            opacity: 0; transition: opacity 0.5s ease;
+        }
+        .work-card:hover { border-color: rgba(201, 168, 76, 0.3); transform: translateY(-4px); }
+        .work-card:hover::before { opacity: 1; }
+        .work-badge {
+            font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 600;
+            letter-spacing: 2px; text-transform: uppercase;
+            display: inline-block; padding: 4px 10px; border-radius: 2px; margin-bottom: 16px;
+        }
+        .work-badge.fiction { background: rgba(196, 160, 160, 0.1); color: var(--rose-glow); border: 1px solid rgba(196, 160, 160, 0.2); }
+        .work-badge.education { background: rgba(122, 138, 106, 0.1); color: var(--sage); border: 1px solid rgba(122, 138, 106, 0.2); }
+        .work-badge.coming { background: rgba(201, 168, 76, 0.08); color: var(--gold); border: 1px solid var(--gold-dim); }
+        .work-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 600; color: var(--parchment-bright); margin-bottom: 12px; letter-spacing: 1px; }
+        .work-desc { font-size: 15px; line-height: 1.7; color: var(--parchment); margin-bottom: 20px; }
+        .work-link {
+            font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--gold); transition: color 0.3s;
+        }
+        .work-card:hover .work-link { color: var(--parchment-bright); }
+
+        /* Brand Values */
+        .values-section { background: radial-gradient(ellipse at 50% 50%, rgba(201, 168, 76, 0.03) 0%, transparent 50%); }
+        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; margin-top: 48px; }
+        .value-card {
+            border: 1px solid rgba(201, 168, 76, 0.1); border-radius: 4px;
+            padding: 32px 24px; background: rgba(10, 10, 15, 0.4); transition: all 0.4s ease;
+        }
+        .value-card:hover { border-color: rgba(201, 168, 76, 0.25); }
+        .value-icon { font-family: 'Cinzel', serif; font-size: 28px; color: var(--gold); margin-bottom: 16px; }
+        .value-title { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 600; color: var(--parchment-bright); margin-bottom: 12px; letter-spacing: 1px; }
+        .value-desc { font-size: 14px; line-height: 1.7; color: var(--parchment-muted); }
+
+        /* Contact */
+        .contact-section { text-align: center; padding: 120px 24px; }
+        .contact-section::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(201, 168, 76, 0.04) 0%, transparent 50%);
+        }
+        .contact-text {
+            position: relative; font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(22px, 3vw, 36px); font-style: italic; font-weight: 500;
+            color: var(--parchment-bright); max-width: 600px; margin: 0 auto 32px; line-height: 1.5;
+        }
+        .contact-email {
+            position: relative; font-family: 'Cinzel', serif; font-size: clamp(18px, 3vw, 28px);
+            color: var(--gold); text-decoration: none; letter-spacing: 1px;
+            border-bottom: 1px solid var(--gold-dim); padding-bottom: 4px; transition: all 0.3s;
+        }
+        .contact-email:hover { color: var(--parchment-bright); border-color: var(--parchment-bright); }
+
+        /* Footer */
+        footer { padding: 48px 24px; border-top: 1px solid rgba(201, 168, 76, 0.08); text-align: center; }
+        .footer-logo { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; color: var(--gold-dim); letter-spacing: 3px; text-transform: uppercase; }
+        .footer-text { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--parchment-muted); margin-top: 12px; letter-spacing: 1px; }
+        .footer-links { display: flex; justify-content: center; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+        .footer-links a { font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--parchment-muted); text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--gold); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 12px 20px; }
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+            .nav-links.open {
+                display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0;
+                background: rgba(6, 6, 10, 0.96); padding: 24px; gap: 20px;
+                border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+            }
+            .hero { padding: 60px 20px; }
+            .section, .section-wide { padding: 60px 20px; }
+            .about-grid { grid-template-columns: 1fr; gap: 32px; }
+            .works-grid { grid-template-columns: 1fr; }
+            .values-grid { grid-template-columns: 1fr; }
+            .hero-cta { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav id="nav">
+    <a href="#" class="nav-logo">Nicole Orenda</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#works">Works</a></li>
+        <li><a href="#values">Vision</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="top">
+    <div class="hero-bg"></div>
+    <div class="hero-particles" id="particles"></div>
+    <h1 class="hero-name">Nicole <span class="orenda">Orenda</span></h1>
+    <p class="hero-tagline">Stories that stay with you. Worlds worth returning to.</p>
+    <p class="hero-tag">Author &middot; Creative Media &middot; Nicole Orenda LLC</p>
+    <div class="hero-cta">
+        <a href="#works" class="btn btn-primary">Explore Works</a>
+        <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+    </div>
+    <div class="scroll-indicator">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+</section>
+
+<!-- About -->
+<section class="section" id="about">
+    <div class="reveal">
+        <p class="section-label">About</p>
+        <h2 class="section-heading">The Story Behind the Name</h2>
+        <div class="about-grid">
+            <div class="about-portrait">
+                <div class="about-portrait-placeholder">N&middot;O</div>
+                <div class="about-portrait-name">Nicole Orenda</div>
+                <div class="about-portrait-title">Author & Creative Producer</div>
+            </div>
+            <div class="section-text">
+                <p>Nicole Orenda writes fantasy worlds where elemental magic meets impossible choices, where romance is earned through danger, and where every chapter leaves you needing the next.</p>
+                <p>Under <strong>Nicole Orenda LLC</strong>, she builds serialized fiction, ebooks, and digital education content designed for readers who want more than a book -- they want a world to inhabit.</p>
+                <p>Her debut series, <em>Breath of Earth</em>, launches in 2026. The franchise spans three Parts across twelve seasons -- a sweeping fantasy romance about Wind, Earth, and the people who dare to break the system that divides them.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">&#10042;</div>
+    <div class="divider-line"></div>
+</div>
+
+<!-- Works -->
+<section class="section-wide" id="works">
+    <div class="reveal">
+        <p class="section-label">Works</p>
+        <h2 class="section-heading">Worlds in Progress</h2>
+        <div class="works-grid">
+            <a href="https://breath-of-earth.com" class="work-card">
+                <span class="work-badge fiction">Fantasy Romance</span>
+                <h3 class="work-title">Breath of Earth</h3>
+                <p class="work-desc">A serialized fantasy romance where Wind rules and Earth serves -- and one Wind-weaver discovers her gift is far more dangerous than anyone knows. Three Parts. Twelve seasons. One world worth burning for.</p>
+                <span class="work-link">Visit breath-of-earth.com &rarr;</span>
+            </a>
+            <div class="work-card">
+                <span class="work-badge education">Digital Education</span>
+                <h3 class="work-title">Pixel Academy</h3>
+                <p class="work-desc">AI education and digital skills training for the next generation of creators. Courses, content, and community designed to make emerging technology accessible and practical.</p>
+                <span class="work-link">Coming Soon</span>
+            </div>
+            <div class="work-card">
+                <span class="work-badge coming">In Development</span>
+                <h3 class="work-title">More to Come</h3>
+                <p class="work-desc">New series, educational programs, and creative projects in development. Nicole Orenda LLC is building a catalog of worlds and tools that grow with their audience.</p>
+                <span class="work-link">Stay Tuned</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values -->
+<section class="section-wide values-section" id="values">
+    <div class="reveal">
+        <p class="section-label">Vision</p>
+        <h2 class="section-heading">What Drives the Work</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">I</div>
+                <h3 class="value-title">Story First</h3>
+                <p class="value-desc">Every product starts with the story. Whether it's a fantasy series or an AI course, the narrative comes before the marketing. Readers and learners can tell the difference.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">II</div>
+                <h3 class="value-title">Direct to Reader</h3>
+                <p class="value-desc">No gatekeepers between the work and the audience. Serialized delivery, direct channels, and content that meets readers where they are -- on their phones, their Kindles, their feeds.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">III</div>
+                <h3 class="value-title">Built to Last</h3>
+                <p class="value-desc">Worlds worth returning to. Courses worth keeping. A brand designed to grow across multiple series, formats, and audiences -- not a single book, but a catalog.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">&#10042;</div>
+    <div class="divider-line"></div>
+</div>
+
+<!-- Contact -->
+<section class="section contact-section" id="contact">
+    <div class="reveal">
+        <p class="section-label">Contact</p>
+        <h2 class="section-heading">Let's Talk</h2>
+        <p class="contact-text">For inquiries, collaborations, press, or reader questions -- reach out directly.</p>
+        <a href="mailto:author@nicoleorenda.com" class="contact-email">author@nicoleorenda.com</a>
+        <p style="position:relative;margin-top:24px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--parchment-muted);">Nicole Orenda LLC</p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-logo">Nicole Orenda</div>
+    <p class="footer-text">&copy; 2026 Nicole Orenda LLC. All rights reserved.</p>
+    <div class="footer-links">
+        <a href="https://breath-of-earth.com">Breath of Earth</a>
+        <a href="mailto:contact@nicoleorenda.com">Contact</a>
+        <a href="mailto:author@nicoleorenda.com">Author</a>
+    </div>
+</footer>
+
+<script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile menu
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    mobileToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Particles
+    const particles = document.getElementById('particles');
+    for (let i = 0; i < 15; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        p.style.animationDuration = (8 + Math.random() * 6) + 's';
+        particles.appendChild(p);
+    }
+</script>
+
+</body>
+</html>
